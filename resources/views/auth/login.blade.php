@@ -1,47 +1,77 @@
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+@extends('layouts.auth')
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
+@section('title', 'Masuk')
+@section('panel_title', 'Halo, Selamat Datang!')
+@section('panel_text', 'Belum punya akun?')
+@section('panel_button_url', route('register'))
+@section('panel_button_text', 'Daftar')
 
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
+{{-- Tambahkan CSS --}}
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('assets/css/auth.css') }}">
+@endsection
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+@section('content')
+    <div class="form-container" id="loginForm">
+        <h1 class="form-title">Masuk</h1>
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
+        {{-- Session Status --}}
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+        <form method="POST" action="{{ route('login') }}" class="auth-form">
+            @csrf
 
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
+            {{-- Error --}}
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
 
-        <div class="flex items-center justify-end mt-4">
+            {{-- Username --}}
+            <div class="input-group">
+                <input type="email" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required
+                    autofocus>
+                <i class="fas fa-user"></i>
+            </div>
+
+            {{-- Password --}}
+            <div class="input-group">
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+
+            {{-- Forgot password --}}
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
+                <a href="{{ route('password.request') }}" class="forgot-password">
+                    Lupa Password?
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+            {{-- Submit --}}
+            <button type="submit" class="btn-submit">Masuk</button>
+
+            {{-- Social login --}}
+            <div class="social-login">
+                <p>atau login dengan sosial media</p>
+                <div class="social-icons">
+                    <a href="/auth/google" class="social-btn"><i class="fab fa-google"></i></a>
+                    <a href="/auth/facebook" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+                    <a href="/auth/github" class="social-btn"><i class="fab fa-github"></i></a>
+                    <a href="/auth/linkedin" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </form>
+    </div>
+@endsection
+
+{{-- Tambahkan JS --}}
+@section('scripts')
+    <script src="{{ asset('public/assets/js/auth.js') }}"></script>
+@endsection

@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         Filament::serving(function () {
             Filament::registerNavigationItems([
                 NavigationItem::make('Home') // Nama menu
-                    ->url(route('homeproduk')) // Route yang dituju
+                    ->url(route('home')) // Route yang dituju
                     ->icon('heroicon-o-link')
                     ->group('Halaman Utama') // Ikon untuk me
             ]);
