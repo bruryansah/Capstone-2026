@@ -11,14 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('artikels', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
             $table->text('deskripsi');
+            $table->text('konten')->nullable();
             $table->string('kategori'); // diet, gizi, lifestyle, tips
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->timestamps();
         });
+        // Schema::create('artikels', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('judul');
+        //     $table->text('deskripsi');
+        //     $table->string('kategori'); // diet, gizi, lifestyle, tips
+        //     $table->text('image');
+        //     $table->timestamps();
+        // });
     }
 
     /**

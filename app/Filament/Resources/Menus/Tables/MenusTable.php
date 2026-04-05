@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
 
 class MenusTable
 {
@@ -23,6 +24,8 @@ class MenusTable
                     ->badge(),
                 TextColumn::make('jenis')
                     ->badge(),
+                ImageColumn::make('image')
+                    ->circular(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

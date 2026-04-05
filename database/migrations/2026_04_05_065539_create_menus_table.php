@@ -16,23 +16,36 @@ return new class extends Migration
             $table->string('kode')->unique();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
-            $table->enum('kategori', [
-                'sarapan',
-                'makan-siang',
-                'makan-malam',
-                'camilan'
-            ]);
-                $table->enum('jenis', [
-                'tinggi-protein', 
-                'rendah-kalori', 
-                'tinggi-kalori', 
-                'vegan', 
-                'gluten-free',
-                'low-carb'
-            ])->default('tinggi-protein');
-            $table->text('image');
+            $table->enum('kategori', ['sarapan', 'makan-siang', 'makan-malam', 'camilan']);
+            $table->integer('kalori');
+            $table->integer('protein');
+            $table->text('image')->nullable();
+            $table->text('resep')->nullable();
             $table->timestamps();
         });
+
+        // Schema::create('menus', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('kode')->unique();
+        //     $table->string('nama');
+        //     $table->text('deskripsi')->nullable();
+        //     $table->enum('kategori', [
+        //         'sarapan',
+        //         'makan-siang',
+        //         'makan-malam',
+        //         'camilan'
+        //     ]);
+        //         $table->enum('jenis', [
+        //         'tinggi-protein',
+        //         'rendah-kalori',
+        //         'tinggi-kalori',
+        //         'vegan',
+        //         'gluten-free',
+        //         'low-carb'
+        //     ])->default('tinggi-protein');
+        //     $table->text('image');
+        //     $table->timestamps();
+        // });
     }
 
     /**

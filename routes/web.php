@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MenuCon;
+use App\Http\Controllers\PembelianCon;
+use Illuminate\Support\Facades\Auth;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -17,4 +18,34 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+// Homepage
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+// Menu Makanan
+Route::get('/menu', function () {
+    return view('menu');
+})->name('menu');
+
+// Artikel
+Route::get('/artikel', function () {
+    return view('artikel');
+})->name('artikel');
+
+// Kalkulator (placeholder)
+Route::get('/kalkulator', function () {
+    return view('kalkulator');
+})->name('kalkulator');
+// oudasndoasd
+
+
+Route::post('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+})->name('logout');
+
+// routes/web.php
+Route::post('/favorites/add', [FavoriteController::class, 'add'])->middleware('auth');

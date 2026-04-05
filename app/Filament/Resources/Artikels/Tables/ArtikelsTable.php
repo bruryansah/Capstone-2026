@@ -8,6 +8,7 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Actions\DeleteAction;
 use Filament\Tables\Table;
+use Filament\Tables\Columns\ImageColumn;
 
 class ArtikelsTable
 {
@@ -19,6 +20,8 @@ class ArtikelsTable
                     ->searchable(),
                 TextColumn::make('kategori')
                     ->searchable(),
+                ImageColumn::make('image')
+                    ->circular(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
