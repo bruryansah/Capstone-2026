@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/pages.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
@@ -19,24 +21,32 @@
 
             <div class="nav-menu" id="navMenu">
                 <a href="{{ url('/') }}" class="nav-link {{ request()->is('/') ? 'active' : '' }}">Beranda</a>
-                <a href="{{ url('/menu') }}" class="nav-link {{ request()->is('menu') ? 'active' : '' }}">Menu Makanan</a>
-                <a href="{{ url('/kalkulator') }}" class="nav-link {{ request()->is('kalkulator') ? 'active' : '' }}">Kalkulator</a>
-                <a href="{{ url('/artikel') }}" class="nav-link {{ request()->is('artikel') ? 'active' : '' }}">Artikel</a>
+                <a href="{{ url('/menu') }}" class="nav-link {{ request()->is('menu') ? 'active' : '' }}">Menu
+                    Makanan</a>
+                <a href="{{ url('/kalkulator') }}"
+                    class="nav-link {{ request()->is('kalkulator') ? 'active' : '' }}">Kalkulator</a>
+                <a href="{{ url('/artikel') }}"
+                    class="nav-link {{ request()->is('artikel') ? 'active' : '' }}">Artikel</a>
+               <a href="{{ route('filament.admin.pages.dashboard') }}"
+                    class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">Dashboard</a>
             </div>
 
             <div class="nav-auth">
                 @if(Auth::check())
                     <div class="user-welcome">
-                        <!-- Dashboard Link (hanya untuk user/admin login) -->
-                        <a href="{{ url('/admin') }}" class="btn-dashboard" title="Dashboard">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </a>
+                        <!-- Dashboard Link - Seragam dengan tema -->
 
-                        <div class="greeting-wrapper">
-                            <span class="greeting-icon"><i class="fas fa-sun" id="greetingIcon"></i></span>
-                            <span class="greeting-text" id="greetingText">Selamat Pagi</span>,
-                            <span class="username">{{ Auth::user()->name }}</span>
+                        <!-- Greeting - Compact & Clean -->
+                        <div class="greeting-box">
+                            <span class="greeting-icon" id="greetingIconWrapper">
+                                <i class="fas fa-sun" id="greetingIcon"></i>
+                            </span>
+                            <div class="greeting-texts">
+                                <span class="greeting-time" id="greetingText">Selamat Pagi</span>
+                                <span class="greeting-username">{{ Auth::user()->name }}</span>
+                            </div>
                         </div>
+
                         <form method="POST" action="{{ route('logout') }}" class="logout-form">
                             @csrf
                             <button type="submit" class="btn-logout" title="Keluar">
@@ -120,7 +130,7 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- Popup Modal (Guest) -->
+    <!-- Popup Modal -->
     <div class="popup-overlay" id="popupOverlay">
         <div class="popup-container">
             <button class="popup-close" id="popupClose">
@@ -139,11 +149,11 @@
 
                     <div class="popup-actions">
                         @guest
-                            <button class="btn-popup btn-favorite" id="btnFavorite" onclick="showLoginAlert()">
+                            <button class="btn-popup btn-favorite" onclick="showLoginAlert()">
                                 <i class="fas fa-heart"></i> Simpan ke Favorit
                             </button>
                         @else
-                            <button class="btn-popup btn-favorite" id="btnFavorite" onclick="addToFavorite()">
+                            <button class="btn-popup btn-favorite" onclick="addToFavorite()">
                                 <i class="fas fa-heart"></i> Simpan ke Favorit
                             </button>
                         @endguest
@@ -179,7 +189,7 @@
     </div>
 
     <script src="{{ asset('assets/js/main.js') }}"></script>
-    <script src="{{ asset('assets/js/pages.js') }}"></script>
     @yield('scripts')
 </body>
+
 </html>

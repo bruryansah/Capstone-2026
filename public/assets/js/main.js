@@ -275,58 +275,307 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// ========== AUTO GREETING BY TIME ==========
-function updateGreeting() {
-    const now = new Date();
-    const hour = now.getHours();
-    const greetingText = document.getElementById('greetingText');
-    const greetingIcon = document.getElementById('greetingIcon');
+document.addEventListener('DOMContentLoaded', function() {
+    // ========== AUTO GREETING BY TIME ==========
+    function updateGreeting() {
+        const now = new Date();
+        const hour = now.getHours();
+        const greetingText = document.getElementById('greetingText');
+        const greetingIcon = document.getElementById('greetingIcon');
+        const iconWrapper = document.getElementById('greetingIconWrapper');
 
-    if (!greetingText || !greetingIcon) return;
+        if (!greetingText || !greetingIcon || !iconWrapper) return;
 
-    let greeting = '';
-    let iconClass = '';
+        let greeting = '';
+        let iconClass = '';
+        let timeClass = '';
 
-    if (hour >= 5 && hour < 11) {
-        // Pagi: 05:00 - 10:59
-        greeting = 'Selamat Pagi';
-        iconClass = 'fa-sun';
-    } else if (hour >= 11 && hour < 15) {
-        // Siang: 11:00 - 14:59
-        greeting = 'Selamat Siang';
-        iconClass = 'fa-cloud-sun';
-    } else if (hour >= 15 && hour < 18) {
-        // Sore: 15:00 - 17:59
-        greeting = 'Selamat Sore';
-        iconClass = 'fa-cloud-sun';
-    } else {
-        // Malam: 18:00 - 04:59
-        greeting = 'Selamat Malam';
-        iconClass = 'fa-moon';
+        if (hour >= 5 && hour < 11) {
+            greeting = 'Selamat Pagi';
+            iconClass = 'fa-sun';
+            timeClass = 'morning';
+        } else if (hour >= 11 && hour < 15) {
+            greeting = 'Selamat Siang';
+            iconClass = 'fa-cloud-sun';
+            timeClass = 'afternoon';
+        } else if (hour >= 15 && hour < 18) {
+            greeting = 'Selamat Sore';
+            iconClass = 'fa-cloud-sun';
+            timeClass = 'evening';
+        } else {
+            greeting = 'Selamat Malam';
+            iconClass = 'fa-moon';
+            timeClass = 'night';
+        }
+
+        // Update text dengan animasi smooth
+        if (greetingText.textContent !== greeting) {
+            greetingText.style.opacity = '0';
+            setTimeout(() => {
+                greetingText.textContent = greeting;
+                greetingText.style.opacity = '1';
+            }, 200);
+        }
+
+        // Update icon dan class wrapper
+        greetingIcon.className = `fas ${iconClass}`;
+        
+        // Reset class
+        iconWrapper.classList.remove('morning', 'afternoon', 'evening', 'night');
+        iconWrapper.classList.add(timeClass);
     }
 
-    // Update text dengan animasi fade
-    if (greetingText.textContent !== greeting) {
-        greetingText.style.opacity = '0';
+    // Jalankan segera
+    updateGreeting();
+    
+    // Update setiap menit
+    setInterval(updateGreeting, 60000);
+    
+    // Update saat tab aktif lagi
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            updateGreeting();
+        }
+    });
+
+    // ========== NAVBAR SCROLL EFFECT ==========
+    const navbar = document.getElementById('navbar');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+        
+        if (currentScroll > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        lastScroll = currentScroll;
+    });
+
+    // ========== MOBILE MENU ==========
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+
+    hamburger?.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
+    });
+
+    // ========== SCROLL ANIMATIONS ==========
+    const animateElements = document.querySelectorAll('[data-animate]');
+    
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animated');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    animateElements.forEach(el => observer.observe(el));
+
+    // ========== FILTER TABS ==========
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const parent = this.closest('.filter-tabs');
+            parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const filter = this.getAttribute('data-filter');
+            const cardsContainer = parent.nextElementSibling;
+            const cards = cardsContainer.querySelectorAll('[data-category]');
+
+            cards.forEach((card, index) => {
+                const category = card.getAttribute('data-category');
+                
+                if (filter === 'all' || category === filter) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.classList.add('show');
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(30px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+
+    // Show all cards initially
+    document.querySelectorAll('.menu-card, .artikel-card').forEach((card, index) => {
         setTimeout(() => {
-            greetingText.textContent = greeting;
-            greetingText.style.opacity = '1';
-        }, 200);
-    }
+            card.classList.add('show');
+        }, index * 100);
+    });
 
-    // Update icon
-    greetingIcon.className = `fas ${iconClass}`;
-}
+    // ========== SMOOTH SCROLL ==========
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                const offsetTop = target.offsetTop - 80;
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
 
-// Jalankan saat load
-updateGreeting();
+    // ========== SCROLL TO TOP ==========
+    const scrollTopBtn = document.getElementById('scrollTop');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 500) {
+            scrollTopBtn?.classList.add('show');
+        } else {
+            scrollTopBtn?.classList.remove('show');
+        }
+    });
 
-// Update setiap menit (untuk perubahan otomatis)
-setInterval(updateGreeting, 60000);
+    scrollTopBtn?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
-// Update saat tab aktif lagi (user kembali ke tab browser)
-document.addEventListener('visibilitychange', function() {
-    if (!document.hidden) {
-        updateGreeting();
-    }
+    // ========== POPUP FUNCTIONALITY ==========
+    window.openPopup = function(type, id, title, description, category, image, kalori = 0, protein = 0) {
+        const overlay = document.getElementById('popupOverlay');
+        const img = document.getElementById('popupImage');
+        const badge = document.getElementById('popupBadge');
+        const titleEl = document.getElementById('popupTitle');
+        const metaEl = document.getElementById('popupMeta');
+        const descEl = document.getElementById('popupDescription');
+        
+        window.currentItem = { type, id, title, description };
+        
+        if (img) {
+            img.src = image;
+            img.alt = title;
+        }
+        if (badge) badge.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' ');
+        if (titleEl) titleEl.textContent = title;
+        if (descEl) descEl.textContent = description;
+        
+        if (metaEl) {
+            if (type === 'menu' && kalori > 0) {
+                metaEl.innerHTML = `
+                    <span class="meta-item"><i class="fas fa-fire"></i> ${kalori} Kalori</span>
+                    <span class="meta-item"><i class="fas fa-drumstick-bite"></i> ${protein}g Protein</span>
+                `;
+            } else {
+                metaEl.innerHTML = `<span class="meta-item"><i class="fas fa-tag"></i> ${category}</span>`;
+            }
+        }
+        
+        if (overlay) {
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closePopup = function() {
+        const overlay = document.getElementById('popupOverlay');
+        if (overlay) {
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+    };
+
+    // Close popup events
+    document.getElementById('popupClose')?.addEventListener('click', window.closePopup);
+    document.getElementById('popupOverlay')?.addEventListener('click', function(e) {
+        if (e.target === this) window.closePopup();
+    });
+
+    // ========== ALERT LOGIN ==========
+    window.showLoginAlert = function() {
+        const alert = document.getElementById('alertOverlay');
+        if (alert) alert.classList.add('show');
+    };
+
+    window.closeAlert = function() {
+        const alert = document.getElementById('alertOverlay');
+        if (alert) alert.classList.remove('show');
+    };
+
+    document.getElementById('alertOverlay')?.addEventListener('click', function(e) {
+        if (e.target === this) window.closeAlert();
+    });
+
+    // ========== SHARE FUNCTIONS ==========
+    window.shareToWhatsApp = function() {
+        if (!window.currentItem) return;
+        const text = `Lihat ${window.currentItem.title} di SeGizi!`;
+        const url = window.location.href;
+        window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+    };
+
+    window.saveToNotes = function() {
+        if (!window.currentItem) return;
+        const content = `${window.currentItem.title}\n\n${window.currentItem.description}\n\nSumber: SeGizi`;
+        
+        navigator.clipboard?.writeText(content).then(() => {
+            alert('Disalin ke clipboard! Anda bisa paste ke catatan.');
+        }).catch(() => {
+            alert('Gagal menyalin teks.');
+        });
+    };
+
+    window.copyLink = function() {
+        navigator.clipboard?.writeText(window.location.href).then(() => {
+            alert('Link disalin!');
+        }).catch(() => {
+            alert('Gagal menyalin link.');
+        });
+    };
+
+    // ========== ADD TO FAVORITE ==========
+    window.addToFavorite = function() {
+        if (!window.currentItem) return;
+        
+        fetch('/favorites/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+            },
+            body: JSON.stringify({
+                type: window.currentItem.type,
+                id: window.currentItem.id
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.message || 'Berhasil ditambahkan!');
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Gagal menambahkan ke favorit.');
+        });
+    };
+
+    console.log('🥗 SeGizi Loaded!');
 });
