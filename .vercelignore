@@ -1,0 +1,15 @@
+/vendor
+/node_modules
+/public/build
+.env
+.env.local
+.env.*.local
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
